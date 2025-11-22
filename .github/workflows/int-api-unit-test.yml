@@ -43,7 +43,6 @@ jobs:
         env:
           SPRING_PROFILES_ACTIVE: cicd
         run: |
-          cd spring
           ./gradlew test --no-daemon
       - name: Report Test Coverage
         uses: madrapps/jacoco-report@v1.7.2
