@@ -3,6 +3,9 @@
 .DS_Store
 *__pycache__/
 
+# Environment variables
+.env
+
 ### Gradle ###
 HELP.md
 .gradle
