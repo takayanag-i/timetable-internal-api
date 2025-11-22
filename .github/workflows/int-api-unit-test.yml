@@ -1,4 +1,4 @@
-name: Int-API Unit Test
+name: Internal API Unit Test
 
 on:
   pull_request:
@@ -38,7 +38,7 @@ jobs:
           exit 1
       - name: Create tables for test DB
         run: |
-          PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -f spring/sql/ddl/ddl.sql
+          PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -f sql/ddl/ddl.sql
       - name: Run Unit Test
         env:
           SPRING_PROFILES_ACTIVE: cicd
@@ -49,6 +49,6 @@ jobs:
         uses: madrapps/jacoco-report@v1.7.2
         with:
           paths: |
-            ${{ github.workspace }}/spring/build/reports/jacoco/jacocoTestReport.xml
+            ${{ github.workspace }}/build/reports/jacoco/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           skip-if-no-changes: true
