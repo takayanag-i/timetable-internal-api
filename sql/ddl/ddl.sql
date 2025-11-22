@@ -268,7 +268,7 @@ CREATE TABLE TIMETABLE_ENTRY (
     created_by VARCHAR(255) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_by VARCHAR(255) NOT NULL,
-    CONSTRAINT pk_timetable_entry PRIMARY KEY (id)
+    CONSTRAINT pk_timetable_entry PRIMARY KEY (id),
     CONSTRAINT fk_timetable_entry_timetable_result FOREIGN KEY (timetable_result_id)
         REFERENCES timetable_result(id),
     CONSTRAINT fk_timetable_entry_homeroom FOREIGN KEY (homeroom_id)
