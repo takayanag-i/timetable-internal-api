@@ -1,0 +1,294 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;
+
+CREATE TABLE TIMETABLE (
+    ttid UUID PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL
+);
+CREATE TABLE DISCIPLINE (
+    discipline_code VARCHAR(255) PRIMARY KEY,
+    discipline_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL
+);
+CREATE SEQUENCE GRADE_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE GRADE (
+    id BIGINT NOT NULL DEFAULT nextval('GRADE_ID_SEQ'),
+    ttid UUID NOT NULL,
+    grade_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_grade PRIMARY KEY (id)
+);
+CREATE SEQUENCE SCHOOL_DAY_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE SCHOOL_DAY (
+    id BIGINT NOT NULL DEFAULT nextval('SCHOOL_DAY_ID_SEQ'),
+    ttid UUID NOT NULL,
+    day_of_week VARCHAR(255) NOT NULL,
+    is_available BOOLEAN NOT NULL,
+    am_periods SMALLINT,
+    pm_periods SMALLINT,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_school_day PRIMARY KEY (id)
+);
+CREATE SEQUENCE INSTRUCTOR_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE INSTRUCTOR (
+    id BIGINT NOT NULL DEFAULT nextval('INSTRUCTOR_ID_SEQ'),
+    ttid UUID NOT NULL,
+    instructor_name VARCHAR(255) NOT NULL,
+    discipline_code VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_instructor PRIMARY KEY (id)
+);
+CREATE SEQUENCE ATTENDANCE_DAY_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE ATTENDANCE_DAY (
+    id BIGINT NOT NULL DEFAULT nextval('ATTENDANCE_DAY_ID_SEQ'),
+    day_of_week VARCHAR(16) NOT NULL,
+    unavailable_periods JSONB NOT NULL,
+    instructor_id BIGINT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_attendance_day_instructor FOREIGN KEY (instructor_id)
+        REFERENCES instructor(id)
+);
+CREATE TABLE SUBJECT (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    ttid UUID NOT NULL,
+    discipline_code VARCHAR(255) NOT NULL,
+    subject_name VARCHAR(255) NOT NULL,
+    credits SMALLINT,
+    grade_id BIGINT,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_subject_discipline FOREIGN KEY (discipline_code)
+        REFERENCES discipline(discipline_code),
+    CONSTRAINT fk_subject_grade FOREIGN KEY (grade_id)
+        REFERENCES grade(id)
+);
+CREATE TABLE ROOM (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    ttid UUID NOT NULL,
+    room_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL
+);
+CREATE SEQUENCE HOMEROOM_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE HOMEROOM (
+    id BIGINT NOT NULL DEFAULT nextval('HOMEROOM_ID_SEQ'),
+    ttid UUID NOT NULL,
+    homeroom_name VARCHAR(255) NOT NULL,
+    grade_id BIGINT,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_homeroom PRIMARY KEY (id),
+    CONSTRAINT fk_homeroom_grade FOREIGN KEY (grade_id)
+        REFERENCES grade(id)
+);
+CREATE SEQUENCE HOMEROOM_DAY_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE HOMEROOM_DAY (
+    id BIGINT NOT NULL DEFAULT nextval('HOMEROOM_DAY_ID_SEQ'),
+    day_of_week VARCHAR(16) NOT NULL,
+    homeroom_id BIGINT NOT NULL,
+    periods SMALLINT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_homeroom_day PRIMARY KEY (id),
+    CONSTRAINT fk_homeroom FOREIGN KEY (homeroom_id)
+        REFERENCES homeroom(id)
+);
+CREATE SEQUENCE BLOCK_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE BLOCK (
+    id BIGINT NOT NULL DEFAULT nextval('BLOCK_ID_SEQ'),
+    homeroom_id BIGINT NOT NULL,
+    block_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_block PRIMARY KEY (id),
+    CONSTRAINT fk_block_homeroom FOREIGN KEY (homeroom_id)
+        REFERENCES homeroom(id)
+);
+CREATE SEQUENCE LANE_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE LANE (
+    id BIGINT NOT NULL DEFAULT nextval('LANE_ID_SEQ'),
+    block_id BIGINT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_lane PRIMARY KEY (id),
+    CONSTRAINT fk_lane_block FOREIGN KEY (block_id)
+        REFERENCES block(id)
+);
+CREATE SEQUENCE COURSE_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE COURSE (
+    id BIGINT NOT NULL DEFAULT nextval('COURSE_ID_SEQ'),
+    subject_id BIGINT NOT NULL,
+    course_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_course PRIMARY KEY (id),
+    CONSTRAINT fk_course_subject FOREIGN KEY (subject_id)
+        REFERENCES subject(id)
+);
+CREATE TABLE COURSE_DETAIL (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    course_id BIGINT NOT NULL,
+    instructor_id BIGINT NOT NULL,
+    room_id BIGINT,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_course_detail_course FOREIGN KEY (course_id)
+        REFERENCES course(id),
+    CONSTRAINT fk_course_detail_instructor FOREIGN KEY (instructor_id)
+        REFERENCES instructor(id),
+    CONSTRAINT fk_course_detail_room FOREIGN KEY (room_id)
+        REFERENCES room(id)
+);
+CREATE TABLE LANE_COURSE (
+    lane_id BIGINT NOT NULL,
+    course_id BIGINT NOT NULL,
+    PRIMARY KEY (lane_id, course_id),
+    CONSTRAINT fk_lane_course_lane FOREIGN KEY (lane_id)
+        REFERENCES lane(id),
+    CONSTRAINT fk_lane_course_course FOREIGN KEY (course_id)
+        REFERENCES course(id)
+);
+CREATE SEQUENCE CONSTRAINT_DEFINITION_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE CONSTRAINT_DEFINITION (
+    id BIGINT NOT NULL DEFAULT nextval('CONSTRAINT_DEFINITION_ID_SEQ'),
+    ttid UUID NOT NULL,
+    constraint_definition_code VARCHAR(255) NOT NULL,
+    soft_flag BOOLEAN NOT NULL,
+    penalty_weight REAL,
+    parameters JSONB,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_constraint_definition PRIMARY KEY (id)
+);
+CREATE TABLE CONSTRAINT_DEFINITION_MASTER (
+    constraint_definition_code VARCHAR(255) NOT NULL,
+    constraint_definition_name VARCHAR(255) NOT NULL,
+    description VARCHAR(1000),
+    mandatory_flag BOOLEAN NOT NULL,
+    soft_flag BOOLEAN NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_constraint_definition_master PRIMARY KEY (constraint_definition_code)
+);
+CREATE TABLE CONSTRAINT_PARAMETER_MASTER (
+    constraint_definition_code VARCHAR(255) NOT NULL,
+    parameter_key VARCHAR(255) NOT NULL,
+    parameter_name VARCHAR(255) NOT NULL,
+    array_flag BOOLEAN NOT NULL,
+    option_list JSONB,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_constraint_parameter_master PRIMARY KEY (constraint_definition_code, parameter_key)
+);
+CREATE SEQUENCE TIMETABLE_RESULT_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE TIMETABLE_RESULT (
+    id BIGINT NOT NULL DEFAULT nextval('TIMETABLE_RESULT_ID_SEQ'),
+    ttid UUID NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_annual_timetable_result PRIMARY KEY (id)
+);
+CREATE SEQUENCE TIMETABLE_ENTRY_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE TIMETABLE_ENTRY (
+    id BIGINT NOT NULL DEFAULT nextval('TIMETABLE_ENTRY_ID_SEQ'),
+    timetable_result_id BIGINT NOT NULL,
+    homeroom_id BIGINT NOT NULL,
+    day_of_week VARCHAR(16) NOT NULL,
+    period SMALLINT NOT NULL,
+    course_id BIGINT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_timetable_entry PRIMARY KEY (id)
+    CONSTRAINT fk_timetable_entry_timetable_result FOREIGN KEY (timetable_result_id)
+        REFERENCES timetable_result(id),
+    CONSTRAINT fk_timetable_entry_homeroom FOREIGN KEY (homeroom_id)
+        REFERENCES homeroom(id),
+    CONSTRAINT fk_timetable_entry_course FOREIGN KEY (course_id)
+        REFERENCES course(id)
+);
+CREATE SEQUENCE CONSTRAINT_VIOLATION_ID_SEQ
+  START WITH 10000 INCREMENT BY 1 MINVALUE 1 NO MAXVALUE
+  CACHE 50;
+CREATE TABLE CONSTRAINT_VIOLATION (
+    id BIGINT NOT NULL DEFAULT nextval('CONSTRAINT_VIOLATION_ID_SEQ'),
+    timetable_result_id BIGINT NOT NULL,
+    constraint_violation_code VARCHAR(255) NOT NULL,
+    violating_keys JSONB,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_constraint_violation PRIMARY KEY (id),
+    CONSTRAINT fk_constraint_violation_timetable_result FOREIGN KEY (timetable_result_id)
+        REFERENCES timetable_result(id)
+);

@@ -1,0 +1,395 @@
+# Scalar types for custom Java types  
+scalar UUID
+scalar DateTime
+scalar JSON
+
+# --------------------------------------
+# Query Root
+type Query {
+    # [IGQ001] 学校曜日取得API
+    schoolDays(input: RetrieveSchoolDaysInput!): [SchoolDay!]!
+    # [IGQ002] 教員取得API
+    instructors(input: RetrieveInstructorsInput!): [Instructor!]!
+    # [IGQ003] 教室取得API
+    rooms(input: RetrieveRoomsInput!): [Room!]!
+    # [IGQ004] 科目取得API
+    subjects(input: RetrieveSubjectsInput!): [Subject!]!
+    # [IGQ005] 学級取得API
+    homerooms(input: RetrieveHomeroomsInput!): [Homeroom!]!
+    # [IGQ006] ブロック取得API
+    blocks(input: RetrieveBlocksInput!): [Block!]!
+    # [IGQ007] レーン取得API
+    lanes(input: RetrieveLanesInput!): [Lane!]!
+    # [IGQ008] 講座取得API
+    courses(input: RetrieveCoursesInput!): [Course!]!
+    # [IGQ009] 学年取得API
+    grades(input: RetrieveGradesInput!): [Grade!]!
+    # [IGQ010] 制約定義取得API
+    constraintDefinitions(input: RetrieveConstraintDefinitionsInput!): [ConstraintDefinition!]!
+}
+
+# --------------------------------------
+# Mutation Root
+type Mutation {
+    # [IGU001] 学校曜日作成更新API
+    upsertSchoolDays(input: UpsertSchoolDaysInput!): [SchoolDay!]!
+    # [IGU002] 教員作成更新API
+    upsertInstructors(input: UpsertInstructorsInput!): [Instructor!]!
+    # [IGU003] 科目作成更新API
+    upsertSubjects(input: UpsertSubjectsInput!): [Subject!]!
+    # [IGU004] 教室作成更新API
+    upsertRooms(input: UpsertRoomsInput!): [Room!]!
+    # [IGU005] 学級作成更新API
+    upsertHomerooms(input: UpsertHomeroomsInput!): [Homeroom!]!
+    # [IGU006] ブロック作成更新API
+    upsertBlocks(input: UpsertBlocksInput!): [Block!]!
+    # [IGU007] 講座作成更新API
+    upsertCourses(input: UpsertCoursesInput!): [Course!]!
+    # [IGU008] レーン更新API
+    upsertLanes(input: UpsertLanesInput!): [Lane!]!
+    # [IGU009] 学年作成更新API
+    upsertGrades(input: UpsertGradesInput!): [Grade!]!
+
+    # [IGD005] 学級削除API
+    deleteHomeroom(id: ID!): Boolean!
+    # [IGD006] ブロック削除API
+    deleteBlock(id: ID!): Boolean!
+    # [IGD007] 講座削除API
+    deleteCourse(id: ID!): Boolean!
+    # [IGD009] 制約定義削除API
+    deleteConstraintDefinition(id: ID!): Boolean!
+}
+
+# --------------------------------------
+# Input
+
+# 学校曜日取得 Input
+input RetrieveSchoolDaysInput {
+    ttid: UUID
+    id: ID
+}
+
+# 教員取得 Input
+input RetrieveInstructorsInput {
+    ttid: UUID
+    id: ID
+}
+
+# 教室取得 Input
+input RetrieveRoomsInput {
+    ttid: UUID
+    id: ID
+}
+
+# 科目取得 Input
+input RetrieveSubjectsInput {
+    ttid: UUID
+    id: ID
+}
+
+# 学級取得 Input
+input RetrieveHomeroomsInput {
+    ttid: UUID
+    id: ID
+}
+
+# ブロック取得 Input
+input RetrieveBlocksInput {
+    homeroomId: ID
+    id: ID
+}
+
+# レーン取得 Input
+input RetrieveLanesInput {
+    blockId: ID
+    id: ID
+}
+
+# 学年取得 Input
+input RetrieveGradesInput {
+    id: ID
+    ttid: UUID
+}
+
+# 講座取得 Input
+input RetrieveCoursesInput {
+    ttid: UUID
+    subjectId: ID
+    id: ID
+}
+
+# 制約定義取得 Input
+input RetrieveConstraintDefinitionsInput {
+    ttid: UUID
+    id: ID
+}
+
+# 学校曜日作成更新Input
+input UpsertSchoolDaysInput {
+    ttid: UUID!
+    schoolDays: [UpdateSchoolDayInput!]!
+    by: String!
+}
+
+input UpdateSchoolDayInput {
+    schoolDayId: ID
+    dayOfWeek: String!
+    isAvailable: Boolean!
+    amPeriods: Int
+    pmPeriods: Int
+}
+
+# 教員作成更新Input
+input UpsertInstructorsInput {
+    ttid: UUID!
+    instructors: [UpdateInstructorInput!]!
+    by: String!
+}
+
+input UpdateInstructorInput {
+    id: ID
+    instructorName: String!
+    disciplineCode: String!
+    attendanceDays: [UpdateAttendanceDayInput!]!
+}
+input UpdateAttendanceDayInput {
+    id: ID
+    dayOfWeek: String!
+    unavailablePeriods: [Int!]!
+}
+
+# 科目作成更新Input
+input UpsertSubjectsInput {
+    ttid: UUID!
+    subjects: [UpdateSubjectInput!]!
+    by: String!
+}
+
+input UpdateSubjectInput {
+    id: ID
+    disciplineCode: String!
+    subjectName: String!
+    credits: Int
+    gradeId: ID
+}
+
+# 教室作成更新Input
+input UpsertRoomsInput {
+    ttid: UUID!
+    rooms: [UpdateRoomInput!]!
+    by: String!
+}
+
+input UpdateRoomInput {
+    id: ID
+    roomName: String!
+}
+
+# 学級作成更新 Input
+input UpsertHomeroomsInput {
+    ttid: UUID!
+    homerooms: [HomeroomInput!]!
+    by: String!
+}
+
+input HomeroomInput {
+    id: ID
+    homeroomName: String!
+    gradeId: ID
+    homeroomDays: [HomeroomDayInput!]!
+}
+input HomeroomDayInput {
+    id: ID
+    dayOfWeek: String!
+    periods: Int!
+}
+
+# ブロック作成更新 Input
+input UpsertBlocksInput {
+    blocks: [BlockInput!]!
+    by: String!
+}
+
+input BlockInput {
+    id: ID
+    homeroomId: ID!
+    blockName: String!
+    laneCount: Int!
+}
+
+# 講座作成更新 Input
+input UpsertCoursesInput {
+    courses: [CourseInput!]!
+    by: String!
+}
+
+input CourseInput {
+    id: ID
+    subjectId: ID
+    courseName: String!
+    courseDetails: [CourseDetailInput!]!
+}
+
+input CourseDetailInput {
+    id: ID
+    instructorId: ID!
+    roomId: ID
+}
+
+# 学年作成更新Input
+input UpsertGradesInput {
+    ttid: UUID
+    grades: [UpdateGradeInput!]!
+    by: String!
+}
+
+input UpdateGradeInput {
+    id: ID
+    gradeName: String!
+}
+
+# レーン更新 Input
+input UpsertLanesInput {
+    lanes: [LaneInput!]!
+    by: String!
+}
+input LaneInput {
+    id: ID!
+    courseIds: [ID!]!
+}
+
+# 制約定義作成更新 Input
+input UpsertConstraintDefinitionsInput {
+    ttid: UUID
+    constraintDefinitions: [ConstraintDefinitionInput!]!
+    by: String!
+}
+
+input ConstraintDefinitionInput {
+    id: ID
+    constraintDefinitionCode: String!
+    softFlag: Boolean!
+    penaltyWeight: Float
+    parameters: JSON
+}
+
+# --------------------------------------
+# type
+
+# 学校曜日
+type SchoolDay {
+    id: ID!
+    ttid: UUID!
+    dayOfWeek: String!
+    isAvailable: Boolean!
+    amPeriods: Int
+    pmPeriods: Int
+}
+
+# 教員
+type Instructor {
+    id: ID!
+    ttid: UUID!
+    instructorName: String!
+    disciplineCode: String!
+    attendanceDays: [AttendanceDay!]!
+}
+
+# 勤怠曜日
+type AttendanceDay {
+    id: ID!
+    instructor: Instructor!
+    dayOfWeek: String!
+    unavailablePeriods: [Int!]!
+}
+
+# 教室
+type Room {
+    id: ID!
+    ttid: UUID!
+    roomName: String!
+}
+
+# 教科
+type Discipline {
+    disciplineCode: String!
+    disciplineName: String!
+}
+
+# 科目
+type Subject {
+    id: ID!
+    ttid: UUID!
+    discipline: Discipline!
+    subjectName: String!
+    credits: Int
+    grade: Grade
+    courses: [Course!]!
+}
+
+# 学級
+type Homeroom {
+    id: ID!
+    ttid: UUID!
+    homeroomName: String!
+    grade: Grade
+    homeroomDays: [HomeroomDay!]!
+    blocks: [Block] # 必須にしない
+}
+
+# 学級曜日
+type HomeroomDay {
+    id: ID!
+    dayOfWeek: String!
+    periods: Int!
+    homeroom: Homeroom!
+}
+
+# ブロック
+type Block {
+    id: ID!
+    homeroomId: ID!
+    blockName: String!
+    lanes: [Lane!]!
+}
+
+# レーン
+type Lane {
+    id: ID!
+    blockId: ID!
+    courses: [Course!]!
+}
+
+# 講座
+type Course {
+    id: ID!
+    subject: Subject!
+    courseName: String!
+    lanes: [Lane]
+    courseDetails: [CourseDetail!]!
+}
+
+# 講座詳細
+type CourseDetail {
+    id: ID!
+    course: Course!
+    instructor: Instructor!
+    room: Room
+}
+
+# 学年
+type Grade {
+    id: ID!
+    ttid: UUID!
+    gradeName: String!
+}
+
+# 制約定義
+type ConstraintDefinition {
+    id: ID!
+    ttid: UUID!
+    constraintDefinitionCode: String!
+    softFlag: Boolean!
+    penaltyWeight: Float
+    parameters: JSON
+}

@@ -1,0 +1,31 @@
+{
+    "name": "Spring DevContainer",
+    "dockerComposeFile": "../../docker-compose.yml",
+    "service": "spring",
+    "workspaceFolder": "/workspaces/timetable/spring",
+    "remoteUser": "root",
+    "forwardPorts": [8080],
+    "containerEnv": {
+      "SPRING_PROFILES_ACTIVE": "test"
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {}
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "zsh"
+            },
+            "extensions": [
+                "mhutchie.git-graph",
+                "GitHub.copilot",
+                "GitHub.copilot-chat",
+                "vscjava.vscode-java-pack",
+                "vmware.vscode-boot-dev-pack",
+                "GraphQL.vscode-graphql-syntax",
+                "GraphQL.vscode-graphql",
+                "ms-ossdata.vscode-pgsql"
+            ]
+        }
+    }
+}

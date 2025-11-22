@@ -1,0 +1,48 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 17.5 (Debian 17.5-1.pgdg120+1)
+-- Dumped by pg_dump version 17.5 (Debian 17.5-1.pgdg120+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Data for Name: subject; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.subject VALUES (13900, '550e8400-e29b-41d4-a716-446655440000', 'JPN', '2現国', 3, '2025-11-09 03:27:38.964524+00', 'RYO', '2025-11-09 03:27:38.964524+00', 'RYO', 10151);
+INSERT INTO public.subject VALUES (31, '550e8400-e29b-41d4-a716-446655440000', 'JPN', '1現国', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (32, '550e8400-e29b-41d4-a716-446655440000', 'JPN', '1言文', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (33, '550e8400-e29b-41d4-a716-446655440000', 'GGH', '1歴総', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (34, '550e8400-e29b-41d4-a716-446655440000', 'MTH', '1数Ⅰ', 3, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (35, '550e8400-e29b-41d4-a716-446655440000', 'MTH', '1数Ａ', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (36, '550e8400-e29b-41d4-a716-446655440000', 'SCI', '1物基', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (37, '550e8400-e29b-41d4-a716-446655440000', 'SCI', '1化基', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (38, '550e8400-e29b-41d4-a716-446655440000', 'SCI', '1生基', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (39, '550e8400-e29b-41d4-a716-446655440000', 'SCI', '1理探基', 1, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (40, '550e8400-e29b-41d4-a716-446655440000', 'HPE', '1保健', 1, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (41, '550e8400-e29b-41d4-a716-446655440000', 'HPE', '1体育', 3, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (42, '550e8400-e29b-41d4-a716-446655440000', 'ART', '1音楽Ⅰ', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (43, '550e8400-e29b-41d4-a716-446655440000', 'ART', '1美術Ⅰ', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (44, '550e8400-e29b-41d4-a716-446655440000', 'ART', '1書道Ⅰ', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (45, '550e8400-e29b-41d4-a716-446655440000', 'ENG', '1英コⅠ', 3, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (46, '550e8400-e29b-41d4-a716-446655440000', 'ENG', '1論表Ⅰ', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (47, '550e8400-e29b-41d4-a716-446655440000', 'HEC', '1家基Ⅰ', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+INSERT INTO public.subject VALUES (48, '550e8400-e29b-41d4-a716-446655440000', 'INF', '1情報Ⅰ', 2, '2025-09-06 00:59:18.458068+00', 'RYO', '2025-09-06 00:59:18.458068+00', 'RYO', 10150);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
