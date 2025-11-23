@@ -1,0 +1,46 @@
+# Git関連
+.git
+.gitignore
+.gitattributes
+.github
+
+# IDE設定
+.vscode
+.idea
+*.iml
+
+# ビルド成果物
+build/
+target/
+.gradle/
+bin/
+
+# 環境変数ファイル
+.env
+.env.*
+!.env.example
+
+# ローカル開発用
+.devcontainer/
+
+# ログファイル
+*.log
+
+# OS関連
+.DS_Store
+Thumbs.db
+
+# テストカバレッジ
+coverage/
+jacoco/
+
+# SQL開発用ファイル
+sql/
+
+# ドキュメント
+README.md
+docs/
+
+# Gradle関連（キャッシュ以外）
+.gradle/*
+!gradle/wrapper/

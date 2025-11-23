@@ -21,7 +21,7 @@ SET row_security = off;
 -- Data for Name: room; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.room VALUES (1, '550e8400-e29b-41d4-a716-446655440000', 'テスト教室', '2025-09-06 12:48:13.007598+00', 'RYO', '2025-09-06 12:48:13.007598+00', 'RYO');
+INSERT INTO public.room (id, ttid, room_name, created_at, created_by, updated_at, updated_by) VALUES (1, '550e8400-e29b-41d4-a716-446655440000', 'テスト教室', '2025-09-06 12:48:13.007598+00', 'RYO', '2025-09-06 12:48:13.007598+00', 'RYO');
 
 
 --
