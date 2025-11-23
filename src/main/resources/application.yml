@@ -1,4 +1,7 @@
 # ベースのapplication.yml
+server:
+  port: ${PORT:8080}
+
 spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:postgres}:5432/${DB_NAME:postgres}

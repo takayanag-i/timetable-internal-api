@@ -33,9 +33,5 @@ ENV PORT=8080
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
 
-# ヘルスチェック
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD curl -f http://localhost:${PORT}/actuator/health || exit 1
-
 # アプリケーション起動
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
