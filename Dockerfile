@@ -34,4 +34,4 @@ RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
 
 # アプリケーション起動
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.profiles.active=sandbox", "-jar", "app.jar"]
