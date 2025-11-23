@@ -16,5 +16,5 @@
 ## Update Dump
 - docker-composeがあるディレクトリで実行する。
 ```shell
-for table in $(docker compose exec -T postgres psql -U postgres -d postgres -t -c "SELECT tablename FROM pg_tables WHERE schemaname='public';"); do docker compose exec -T postgres pg_dump -U postgres -d postgres -t "$table" --data-only --inserts > "spring/sql/insert/${table}_dump.sql"; done
+for table in $(docker compose exec -T postgres psql -U postgres -d postgres -t -c "SELECT tablename FROM pg_tables WHERE schemaname='public';"); do docker compose exec -T postgres pg_dump -U postgres -d postgres -t "$table" --data-only --column-inserts > "spring/sql/insert/${table}_dump.sql"; done
 ```

@@ -21,13 +21,13 @@ SET row_security = off;
 -- Data for Name: school_day; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.school_day VALUES (58, '550e8400-e29b-41d4-a716-446655440000', 'mon', true, 4, 3, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
-INSERT INTO public.school_day VALUES (59, '550e8400-e29b-41d4-a716-446655440000', 'tue', true, 4, 3, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
-INSERT INTO public.school_day VALUES (60, '550e8400-e29b-41d4-a716-446655440000', 'wed', true, 4, 2, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
-INSERT INTO public.school_day VALUES (61, '550e8400-e29b-41d4-a716-446655440000', 'thu', true, 4, 2, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
-INSERT INTO public.school_day VALUES (62, '550e8400-e29b-41d4-a716-446655440000', 'fri', true, 4, 2, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
-INSERT INTO public.school_day VALUES (63, '550e8400-e29b-41d4-a716-446655440000', 'sat', false, NULL, NULL, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
-INSERT INTO public.school_day VALUES (64, '550e8400-e29b-41d4-a716-446655440000', 'sun', false, NULL, NULL, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
+INSERT INTO public.school_day (id, ttid, day_of_week, is_available, am_periods, pm_periods, created_at, created_by, updated_at, updated_by) VALUES (58, '550e8400-e29b-41d4-a716-446655440000', 'mon', true, 4, 3, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
+INSERT INTO public.school_day (id, ttid, day_of_week, is_available, am_periods, pm_periods, created_at, created_by, updated_at, updated_by) VALUES (59, '550e8400-e29b-41d4-a716-446655440000', 'tue', true, 4, 3, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
+INSERT INTO public.school_day (id, ttid, day_of_week, is_available, am_periods, pm_periods, created_at, created_by, updated_at, updated_by) VALUES (60, '550e8400-e29b-41d4-a716-446655440000', 'wed', true, 4, 2, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
+INSERT INTO public.school_day (id, ttid, day_of_week, is_available, am_periods, pm_periods, created_at, created_by, updated_at, updated_by) VALUES (61, '550e8400-e29b-41d4-a716-446655440000', 'thu', true, 4, 2, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
+INSERT INTO public.school_day (id, ttid, day_of_week, is_available, am_periods, pm_periods, created_at, created_by, updated_at, updated_by) VALUES (62, '550e8400-e29b-41d4-a716-446655440000', 'fri', true, 4, 2, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
+INSERT INTO public.school_day (id, ttid, day_of_week, is_available, am_periods, pm_periods, created_at, created_by, updated_at, updated_by) VALUES (63, '550e8400-e29b-41d4-a716-446655440000', 'sat', false, NULL, NULL, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
+INSERT INTO public.school_day (id, ttid, day_of_week, is_available, am_periods, pm_periods, created_at, created_by, updated_at, updated_by) VALUES (64, '550e8400-e29b-41d4-a716-446655440000', 'sun', false, NULL, NULL, '2025-09-06 03:10:47.345084+00', 'RYO', '2025-09-06 03:10:47.345084+00', 'RYO');
 
 
 --

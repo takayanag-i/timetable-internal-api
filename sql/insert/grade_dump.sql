@@ -21,8 +21,8 @@ SET row_security = off;
 -- Data for Name: grade; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.grade VALUES (10150, '1年', '2025-11-09 02:29:59.872663+00', 'RYO', '2025-11-09 02:29:59.872663+00', 'RYO', '550e8400-e29b-41d4-a716-446655440000');
-INSERT INTO public.grade VALUES (10151, '2年', '2025-11-09 02:29:59.872663+00', 'RYO', '2025-11-09 02:29:59.872663+00', 'RYO', '550e8400-e29b-41d4-a716-446655440000');
+INSERT INTO public.grade (id, grade_name, created_at, created_by, updated_at, updated_by, ttid) VALUES (10150, '1年', '2025-11-09 02:29:59.872663+00', 'RYO', '2025-11-09 02:29:59.872663+00', 'RYO', '550e8400-e29b-41d4-a716-446655440000');
+INSERT INTO public.grade (id, grade_name, created_at, created_by, updated_at, updated_by, ttid) VALUES (10151, '2年', '2025-11-09 02:29:59.872663+00', 'RYO', '2025-11-09 02:29:59.872663+00', 'RYO', '550e8400-e29b-41d4-a716-446655440000');
 
 
 --
