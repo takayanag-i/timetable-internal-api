@@ -150,6 +150,29 @@ class TransactionalGraphQlInterceptorTest {
         verify(transactionManager, never()).rollback(any());
     }
 
+    @Test
+    void invalidQuery_shouldNotStartTransactionAndDelegate() {
+        // Given
+        String invalidQuery = "invalid { malformed query";
+        WebGraphQlRequest request = createWebGraphQlRequest(invalidQuery);
+
+        ExecutionResult executionResult = ExecutionResultImpl.newExecutionResult()
+                .errors(List.of(GraphqlErrorBuilder.newError().message("Syntax error").build()))
+                .build();
+
+        WebGraphQlResponse response = createWebGraphQlResponse(request, executionResult);
+
+        when(chain.next(request)).thenReturn(Mono.just(response));
+
+        // When
+        interceptor.intercept(request, chain).block();
+
+        // Then - should pass through without starting transaction
+        verify(transactionManager, never()).getTransaction(any());
+        verify(transactionManager, never()).commit(any());
+        verify(transactionManager, never()).rollback(any());
+    }
+
     @SuppressWarnings("removal")
     private WebGraphQlRequest createWebGraphQlRequest(String document) {
         URI uri = URI.create("http://localhost:8080/graphql");
