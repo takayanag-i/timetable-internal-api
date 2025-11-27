@@ -2,6 +2,7 @@ package dev.timetable.spring.graphql.resolver;
 
 import dev.timetable.spring.domain.entity.BlockEntity;
 import dev.timetable.spring.domain.entity.ConstraintDefinitionEntity;
+import dev.timetable.spring.domain.entity.ConstraintViolationEntity;
 import dev.timetable.spring.domain.entity.CourseEntity;
 import dev.timetable.spring.domain.entity.HomeroomEntity;
 import dev.timetable.spring.domain.entity.GradeEntity;
@@ -10,8 +11,11 @@ import dev.timetable.spring.domain.entity.LaneEntity;
 import dev.timetable.spring.domain.entity.RoomEntity;
 import dev.timetable.spring.domain.entity.SchoolDayEntity;
 import dev.timetable.spring.domain.entity.SubjectEntity;
+import dev.timetable.spring.domain.entity.TimetableEntryEntity;
+import dev.timetable.spring.domain.entity.TimetableResultEntity;
 import dev.timetable.spring.dto.block.UpsertBlocksInput;
 import dev.timetable.spring.dto.constraintdefinition.UpsertConstraintDefinitionsInput;
+import dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput;
 import dev.timetable.spring.dto.course.UpsertCoursesInput;
 import dev.timetable.spring.dto.homeroom.UpsertHomeroomsInput;
 import dev.timetable.spring.dto.instructor.UpsertInstructorsInput;
@@ -20,8 +24,11 @@ import dev.timetable.spring.dto.lane.UpsertLanesInput;
 import dev.timetable.spring.dto.room.UpsertRoomsInput;
 import dev.timetable.spring.dto.schoolday.UpsertSchoolDaysInput;
 import dev.timetable.spring.dto.subject.UpsertSubjectsInput;
+import dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput;
+import dev.timetable.spring.dto.timetableresult.UpsertTimetableResultsInput;
 import dev.timetable.spring.service.BlockService;
 import dev.timetable.spring.service.ConstraintDefinitionService;
+import dev.timetable.spring.service.ConstraintViolationService;
 import dev.timetable.spring.service.CourseService;
 import dev.timetable.spring.service.HomeroomService;
 import dev.timetable.spring.service.InstructorService;
@@ -29,6 +36,8 @@ import dev.timetable.spring.service.LaneService;
 import dev.timetable.spring.service.RoomService;
 import dev.timetable.spring.service.SchoolDayService;
 import dev.timetable.spring.service.SubjectService;
+import dev.timetable.spring.service.TimetableEntryService;
+import dev.timetable.spring.service.TimetableResultService;
 import dev.timetable.spring.service.GradeService;
 import lombok.RequiredArgsConstructor;
 
@@ -56,6 +65,9 @@ public class MutationResolver {
     private final LaneService laneService;
     private final ConstraintDefinitionService constraintDefinitionService;
     private final GradeService gradeService;
+    private final TimetableResultService timetableResultService;
+    private final TimetableEntryService timetableEntryService;
+    private final ConstraintViolationService constraintViolationService;
 
     /**
      * [GM001] 学校曜日作成更新API
@@ -198,5 +210,38 @@ public class MutationResolver {
     public Boolean deleteConstraintDefinition(@Argument Long id) {
         constraintDefinitionService.deleteById(id);
         return true;
+    }
+
+    /**
+     * [IGU011] 時間割編成結果作成更新API
+     *
+     * @param input
+     * @return
+     */
+    @MutationMapping
+    public List<TimetableResultEntity> upsertTimetableResults(@Argument UpsertTimetableResultsInput input) {
+        return timetableResultService.upsert(input);
+    }
+
+    /**
+     * [IGU012] 時間割エントリ作成更新API
+     *
+     * @param input
+     * @return
+     */
+    @MutationMapping
+    public List<TimetableEntryEntity> upsertTimetableEntries(@Argument UpsertTimetableEntriesInput input) {
+        return timetableEntryService.upsert(input);
+    }
+
+    /**
+     * [IGU013] 制約違反作成更新API
+     *
+     * @param input
+     * @return
+     */
+    @MutationMapping
+    public List<ConstraintViolationEntity> upsertConstraintViolations(@Argument UpsertConstraintViolationsInput input) {
+        return constraintViolationService.upsert(input);
     }
 }
