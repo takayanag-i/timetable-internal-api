@@ -47,7 +47,6 @@ jobs:
           DB_USER: postgres
           DB_PASSWORD: postgres
         run: |
-          cd spring
           ./gradlew test --no-daemon
       - name: Report Test Coverage
         uses: madrapps/jacoco-report@v1.7.2
