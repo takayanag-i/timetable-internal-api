@@ -26,6 +26,8 @@ type Query {
     grades(input: RetrieveGradesInput!): [Grade!]!
     # [IGQ010] 制約定義取得API
     constraintDefinitions(input: RetrieveConstraintDefinitionsInput!): [ConstraintDefinition!]!
+    # [IGQ011] 時間割編成結果取得API
+    timetableResults(input: RetrieveTimetableResultsInput!): [TimetableResult!]!
 }
 
 # --------------------------------------
@@ -58,6 +60,13 @@ type Mutation {
     deleteCourse(id: ID!): Boolean!
     # [IGD009] 制約定義削除API
     deleteConstraintDefinition(id: ID!): Boolean!
+
+    # [IGU011] 時間割編成結果作成更新API
+    upsertTimetableResults(input: UpsertTimetableResultsInput!): [TimetableResult!]!
+    # [IGU012] 時間割エントリ作成更新API
+    upsertTimetableEntries(input: UpsertTimetableEntriesInput!): [TimetableEntry!]!
+    # [IGU013] 制約違反作成更新API
+    upsertConstraintViolations(input: UpsertConstraintViolationsInput!): [ConstraintViolation!]!
 }
 
 # --------------------------------------
@@ -120,6 +129,12 @@ input RetrieveCoursesInput {
 
 # 制約定義取得 Input
 input RetrieveConstraintDefinitionsInput {
+    ttid: UUID
+    id: ID
+}
+
+# 時間割編成結果取得 Input
+input RetrieveTimetableResultsInput {
     ttid: UUID
     id: ID
 }
@@ -273,6 +288,45 @@ input ConstraintDefinitionInput {
     parameters: JSON
 }
 
+# 時間割編成結果作成更新 Input
+input UpsertTimetableResultsInput {
+    ttid: UUID
+    timetableResults: [TimetableResultInput!]!
+    by: String!
+}
+
+input TimetableResultInput {
+    id: ID
+}
+
+# 時間割エントリ作成更新 Input
+input UpsertTimetableEntriesInput {
+    timetableResultId: ID
+    timetableEntries: [TimetableEntryInput!]!
+    by: String!
+}
+
+input TimetableEntryInput {
+    id: ID
+    homeroomId: ID!
+    dayOfWeek: String!
+    period: Int!
+    courseId: ID!
+}
+
+# 制約違反作成更新 Input
+input UpsertConstraintViolationsInput {
+    timetableResultId: ID
+    constraintViolations: [ConstraintViolationInput!]!
+    by: String!
+}
+
+input ConstraintViolationInput {
+    id: ID
+    constraintViolationCode: String!
+    violatingKeys: JSON
+}
+
 # --------------------------------------
 # type
 
@@ -392,4 +446,30 @@ type ConstraintDefinition {
     softFlag: Boolean!
     penaltyWeight: Float
     parameters: JSON
+}
+
+# 時間割編成結果
+type TimetableResult {
+    id: ID!
+    ttid: UUID!
+    timetableEntries: [TimetableEntry!]!
+    constraintViolations: [ConstraintViolation!]!
+}
+
+# 時間割エントリ
+type TimetableEntry {
+    id: ID!
+    timetableResult: TimetableResult!
+    homeroom: Homeroom!
+    dayOfWeek: String!
+    period: Int!
+    course: Course!
+}
+
+# 制約違反
+type ConstraintViolation {
+    id: ID!
+    timetableResult: TimetableResult!
+    constraintViolationCode: String!
+    violatingKeys: JSON
 }

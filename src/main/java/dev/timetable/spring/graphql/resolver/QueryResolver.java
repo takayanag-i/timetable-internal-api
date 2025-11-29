@@ -10,6 +10,7 @@ import dev.timetable.spring.domain.entity.LaneEntity;
 import dev.timetable.spring.domain.entity.RoomEntity;
 import dev.timetable.spring.domain.entity.SchoolDayEntity;
 import dev.timetable.spring.domain.entity.SubjectEntity;
+import dev.timetable.spring.domain.entity.TimetableResultEntity;
 import dev.timetable.spring.dto.block.RetrieveBlocksInput;
 import dev.timetable.spring.dto.constraintdefinition.RetrieveConstraintDefinitionsInput;
 import dev.timetable.spring.dto.homeroom.RetrieveHomeroomsInput;
@@ -19,6 +20,7 @@ import dev.timetable.spring.dto.lane.RetrieveLanesInput;
 import dev.timetable.spring.dto.room.RetrieveRoomsInput;
 import dev.timetable.spring.dto.schoolday.RetrieveSchoolDaysInput;
 import dev.timetable.spring.dto.subject.RetrieveSubjectsInput;
+import dev.timetable.spring.dto.timetableresult.RetrieveTimetableResultsInput;
 import dev.timetable.spring.dto.grade.RetrieveGradesInput;
 import dev.timetable.spring.service.BlockService;
 import dev.timetable.spring.service.ConstraintDefinitionService;
@@ -28,6 +30,7 @@ import dev.timetable.spring.service.LaneService;
 import dev.timetable.spring.service.RoomService;
 import dev.timetable.spring.service.SchoolDayService;
 import dev.timetable.spring.service.SubjectService;
+import dev.timetable.spring.service.TimetableResultService;
 import dev.timetable.spring.service.CourseService;
 import dev.timetable.spring.service.GradeService;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +58,7 @@ public class QueryResolver {
     private final ConstraintDefinitionService constraintDefinitionService;
     private final CourseService courseService;
     private final GradeService gradeService;
+    private final TimetableResultService timetableResultService;
     
     /**
      * [IGQ001] 学校曜日取得API
@@ -163,5 +167,15 @@ public class QueryResolver {
     @QueryMapping
     public List<ConstraintDefinitionEntity> constraintDefinitions(@Argument RetrieveConstraintDefinitionsInput input) {
         return constraintDefinitionService.retrieve(input);
+    }
+
+    /**
+     * [IGQ011] 時間割編成結果取得API
+     *
+     * @param input
+     */
+    @QueryMapping
+    public List<TimetableResultEntity> timetableResults(@Argument RetrieveTimetableResultsInput input) {
+        return timetableResultService.retrieve(input);
     }
 }

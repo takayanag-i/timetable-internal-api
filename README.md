@@ -1,4 +1,4 @@
-# Spring Boot App
+# Timetable Internal API
 ## Container
 - **OS**: Ubuntu 24.04.2 LTS (noble)
 - **JDK**: Temurin 21.0.7+6-LTS (Java21)
