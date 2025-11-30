@@ -2,6 +2,7 @@ package dev.timetable.spring.graphql.resolver;
 
 import dev.timetable.spring.domain.entity.BlockEntity;
 import dev.timetable.spring.domain.entity.ConstraintDefinitionEntity;
+import dev.timetable.spring.domain.entity.ConstraintDefinitionMasterEntity;
 import dev.timetable.spring.domain.entity.CourseEntity;
 import dev.timetable.spring.domain.entity.GradeEntity;
 import dev.timetable.spring.domain.entity.HomeroomEntity;
@@ -24,6 +25,7 @@ import dev.timetable.spring.dto.timetableresult.RetrieveTimetableResultsInput;
 import dev.timetable.spring.dto.grade.RetrieveGradesInput;
 import dev.timetable.spring.service.BlockService;
 import dev.timetable.spring.service.ConstraintDefinitionService;
+import dev.timetable.spring.service.ConstraintDefinitionMasterService;
 import dev.timetable.spring.service.HomeroomService;
 import dev.timetable.spring.service.InstructorService;
 import dev.timetable.spring.service.LaneService;
@@ -56,6 +58,7 @@ public class QueryResolver {
     private final BlockService blockService;
     private final LaneService laneService;
     private final ConstraintDefinitionService constraintDefinitionService;
+    private final ConstraintDefinitionMasterService constraintDefinitionMasterService;
     private final CourseService courseService;
     private final GradeService gradeService;
     private final TimetableResultService timetableResultService;
@@ -171,11 +174,21 @@ public class QueryResolver {
 
     /**
      * [IGQ011] 時間割編成結果取得API
-     *
+     * 
      * @param input
      */
     @QueryMapping
     public List<TimetableResultEntity> timetableResults(@Argument RetrieveTimetableResultsInput input) {
         return timetableResultService.retrieve(input);
+    }
+
+    /**
+     * [IGQ012] 制約定義マスタ取得API
+     * 
+     * @return 制約定義マスタエンティティリスト
+     */
+    @QueryMapping
+    public List<ConstraintDefinitionMasterEntity> constraintDefinitionMasters() {
+        return constraintDefinitionMasterService.retrieveAll();
     }
 }
