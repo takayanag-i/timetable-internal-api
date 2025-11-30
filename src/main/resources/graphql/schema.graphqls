@@ -28,6 +28,8 @@ type Query {
     constraintDefinitions(input: RetrieveConstraintDefinitionsInput!): [ConstraintDefinition!]!
     # [IGQ011] 時間割編成結果取得API
     timetableResults(input: RetrieveTimetableResultsInput!): [TimetableResult!]!
+    # [IGQ012] 制約定義マスタ取得API
+    constraintDefinitionMasters: [ConstraintDefinitionMaster!]!
 }
 
 # --------------------------------------
@@ -51,6 +53,8 @@ type Mutation {
     upsertLanes(input: UpsertLanesInput!): [Lane!]!
     # [IGU009] 学年作成更新API
     upsertGrades(input: UpsertGradesInput!): [Grade!]!
+    # [IGU010] 制約定義作成更新API
+    upsertConstraintDefinitions(input: UpsertConstraintDefinitionsInput!): [ConstraintDefinition!]!
 
     # [IGD005] 学級削除API
     deleteHomeroom(id: ID!): Boolean!
@@ -446,6 +450,24 @@ type ConstraintDefinition {
     softFlag: Boolean!
     penaltyWeight: Float
     parameters: JSON
+}
+
+# 制約定義マスタ
+type ConstraintDefinitionMaster {
+    constraintDefinitionCode: String!
+    constraintDefinitionName: String!
+    description: String
+    mandatoryFlag: Boolean!
+    softFlag: Boolean!
+    parameterMasters: [ConstraintParameterMaster!]!
+}
+
+# 制約パラメータマスタ
+type ConstraintParameterMaster {
+    parameterKey: String!
+    parameterName: String!
+    arrayFlag: Boolean!
+    optionList: JSON
 }
 
 # 時間割編成結果
