@@ -24,5 +24,27 @@ public class UpsertTimetableResultsInput {
     @Jacksonized
     public static class TimetableResultInput {
         Long id;
+        List<TimetableEntryInput> timetableEntries;
+        List<ConstraintViolationInput> constraintViolations;
+
+        @Value
+        @Builder
+        @Jacksonized
+        public static class TimetableEntryInput {
+            Long id;
+            Long homeroomId;
+            String dayOfWeek;
+            Integer period;
+            Long courseId;
+        }
+
+        @Value
+        @Builder
+        @Jacksonized
+        public static class ConstraintViolationInput {
+            Long id;
+            String constraintViolationCode;
+            Object violatingKeys;
+        }
     }
 }
