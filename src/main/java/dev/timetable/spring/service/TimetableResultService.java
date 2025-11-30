@@ -27,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 public class TimetableResultService {
 
     private final TimetableResultRepository timetableResultRepository;
+    private final TimetableEntryService timetableEntryService;
+    private final ConstraintViolationService constraintViolationService;
 
     /**
      * 時間割編成結果を取得する.
@@ -85,6 +87,50 @@ public class TimetableResultService {
             .toList();
 
         timetableResultRepository.saveAll(entities);
+
+        // Result作成後、EntriesとViolationsも一緒に作成
+        for (int i = 0; i < inputs.size(); i++) {
+            TimetableResultInput input = inputs.get(i);
+            TimetableResultEntity entity = entities.get(i);
+            Long resultId = entity.getId();
+
+            // TimetableEntriesを作成
+            if (input.getTimetableEntries() != null && !input.getTimetableEntries().isEmpty()) {
+                dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput entriesInput =
+                    dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput.builder()
+                        .timetableResultId(resultId)
+                        .timetableEntries(input.getTimetableEntries().stream()
+                            .map(entry -> dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput.TimetableEntryInput.builder()
+                                .id(entry.getId())
+                                .homeroomId(entry.getHomeroomId())
+                                .dayOfWeek(entry.getDayOfWeek())
+                                .period(entry.getPeriod())
+                                .courseId(entry.getCourseId())
+                                .build())
+                            .toList())
+                        .by(updatedBy)
+                        .build();
+                timetableEntryService.upsert(entriesInput);
+            }
+
+            // ConstraintViolationsを作成
+            if (input.getConstraintViolations() != null && !input.getConstraintViolations().isEmpty()) {
+                dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput violationsInput =
+                    dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput.builder()
+                        .timetableResultId(resultId)
+                        .constraintViolations(input.getConstraintViolations().stream()
+                            .map(violation -> dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput.ConstraintViolationInput.builder()
+                                .id(violation.getId())
+                                .constraintViolationCode(violation.getConstraintViolationCode())
+                                .violatingKeys(violation.getViolatingKeys())
+                                .build())
+                            .toList())
+                        .by(updatedBy)
+                        .build();
+                constraintViolationService.upsert(violationsInput);
+            }
+        }
+
         return entities;
     }
 
