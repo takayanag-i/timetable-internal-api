@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dev.timetable.spring.domain.entity.TimetableResultEntity;
 import dev.timetable.spring.domain.updater.TimetableResultUpdater;
+import dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput;
+import dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput.ConstraintViolationInput;
+import dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput;
+import dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput.TimetableEntryInput;
 import dev.timetable.spring.dto.timetableresult.RetrieveTimetableResultsInput;
 import dev.timetable.spring.dto.timetableresult.UpsertTimetableResultsInput;
 import dev.timetable.spring.dto.timetableresult.UpsertTimetableResultsInput.TimetableResultInput;
@@ -96,11 +100,11 @@ public class TimetableResultService {
 
             // TimetableEntriesを作成
             if (input.getTimetableEntries() != null && !input.getTimetableEntries().isEmpty()) {
-                dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput entriesInput =
-                    dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput.builder()
+                UpsertTimetableEntriesInput entriesInput =
+                    UpsertTimetableEntriesInput.builder()
                         .timetableResultId(resultId)
                         .timetableEntries(input.getTimetableEntries().stream()
-                            .map(entry -> dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput.TimetableEntryInput.builder()
+                            .map(entry -> TimetableEntryInput.builder()
                                 .id(entry.getId())
                                 .homeroomId(entry.getHomeroomId())
                                 .dayOfWeek(entry.getDayOfWeek())
@@ -115,11 +119,11 @@ public class TimetableResultService {
 
             // ConstraintViolationsを作成
             if (input.getConstraintViolations() != null && !input.getConstraintViolations().isEmpty()) {
-                dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput violationsInput =
-                    dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput.builder()
+                UpsertConstraintViolationsInput violationsInput =
+                    UpsertConstraintViolationsInput.builder()
                         .timetableResultId(resultId)
                         .constraintViolations(input.getConstraintViolations().stream()
-                            .map(violation -> dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput.ConstraintViolationInput.builder()
+                            .map(violation -> ConstraintViolationInput.builder()
                                 .id(violation.getId())
                                 .constraintViolationCode(violation.getConstraintViolationCode())
                                 .violatingKeys(violation.getViolatingKeys())
