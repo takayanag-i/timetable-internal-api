@@ -7,6 +7,7 @@ import dev.timetable.spring.domain.entity.HomeroomEntity;
 import dev.timetable.spring.domain.entity.TimetableEntryEntity;
 import dev.timetable.spring.domain.entity.TimetableResultEntity;
 import dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput.TimetableEntryInput;
+import dev.timetable.spring.dto.timetableresult.UpsertTimetableResultsInput.TimetableResultInput;
 
 /**
  * 時間割エントリUpdater.
@@ -24,6 +25,29 @@ public class TimetableEntryUpdater {
             HomeroomEntity homeroom,
             CourseEntity course,
             TimetableEntryInput input,
+            String updatedBy,
+            OffsetDateTime now) {
+        return TimetableEntryEntity.builder()
+            .timetableResult(timetableResult)
+            .homeroom(homeroom)
+            .dayOfWeek(input.getDayOfWeek())
+            .period(input.getPeriod().shortValue())
+            .course(course)
+            .createdAt(now)
+            .createdBy(updatedBy)
+            .updatedAt(now)
+            .updatedBy(updatedBy)
+            .build();
+    }
+
+    /**
+     * 時間割エントリEntityを作成する（TimetableResultInput用）.
+     */
+    public static TimetableEntryEntity create(
+            TimetableResultEntity timetableResult,
+            HomeroomEntity homeroom,
+            CourseEntity course,
+            TimetableResultInput.TimetableEntryInput input,
             String updatedBy,
             OffsetDateTime now) {
         return TimetableEntryEntity.builder()
