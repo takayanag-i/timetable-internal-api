@@ -9,11 +9,20 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dev.timetable.spring.domain.entity.ConstraintViolationEntity;
+import dev.timetable.spring.domain.entity.CourseEntity;
+import dev.timetable.spring.domain.entity.HomeroomEntity;
+import dev.timetable.spring.domain.entity.TimetableEntryEntity;
 import dev.timetable.spring.domain.entity.TimetableResultEntity;
+import dev.timetable.spring.domain.updater.ConstraintViolationUpdater;
+import dev.timetable.spring.domain.updater.TimetableEntryUpdater;
 import dev.timetable.spring.domain.updater.TimetableResultUpdater;
 import dev.timetable.spring.dto.timetableresult.RetrieveTimetableResultsInput;
 import dev.timetable.spring.dto.timetableresult.UpsertTimetableResultsInput;
 import dev.timetable.spring.dto.timetableresult.UpsertTimetableResultsInput.TimetableResultInput;
+import dev.timetable.spring.dto.timetableresult.UpsertTimetableResultsInput.TimetableResultInput.TimetableEntryInput;
+import dev.timetable.spring.repository.CourseRepository;
+import dev.timetable.spring.repository.HomeroomRepository;
 import dev.timetable.spring.repository.TimetableResultRepository;
 import dev.timetable.spring.util.EntityMapUtil;
 import dev.timetable.spring.util.EntityValidationUtil;
@@ -27,8 +36,8 @@ import lombok.RequiredArgsConstructor;
 public class TimetableResultService {
 
     private final TimetableResultRepository timetableResultRepository;
-    private final TimetableEntryService timetableEntryService;
-    private final ConstraintViolationService constraintViolationService;
+    private final HomeroomRepository homeroomRepository;
+    private final CourseRepository courseRepository;
 
     /**
      * 時間割編成結果を取得する.
@@ -82,54 +91,78 @@ public class TimetableResultService {
     }
 
     private List<TimetableResultEntity> create(UUID ttid, List<TimetableResultInput> inputs, String updatedBy, OffsetDateTime now) {
-        List<TimetableResultEntity> entities = inputs.stream()
-            .map(input -> TimetableResultUpdater.create(ttid, input, updatedBy, now))
+        // 全入力から学級IDと講座IDを収集
+        List<Long> allHomeroomIds = inputs.stream()
+            .filter(input -> input.getTimetableEntries() != null)
+            .flatMap(input -> input.getTimetableEntries().stream())
+            .map(TimetableEntryInput::getHomeroomId)
+            .distinct()
             .toList();
 
-        timetableResultRepository.saveAll(entities);
+        List<Long> allCourseIds = inputs.stream()
+            .filter(input -> input.getTimetableEntries() != null)
+            .flatMap(input -> input.getTimetableEntries().stream())
+            .map(TimetableEntryInput::getCourseId)
+            .distinct()
+            .toList();
 
-        // Result作成後、EntriesとViolationsも一緒に作成
-        for (int i = 0; i < inputs.size(); i++) {
-            TimetableResultInput input = inputs.get(i);
-            TimetableResultEntity entity = entities.get(i);
-            Long resultId = entity.getId();
-
-            // TimetableEntriesを作成
-            if (input.getTimetableEntries() != null && !input.getTimetableEntries().isEmpty()) {
-                dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput entriesInput =
-                    dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput.builder()
-                        .timetableResultId(resultId)
-                        .timetableEntries(input.getTimetableEntries().stream()
-                            .map(entry -> dev.timetable.spring.dto.timetableentry.UpsertTimetableEntriesInput.TimetableEntryInput.builder()
-                                .id(entry.getId())
-                                .homeroomId(entry.getHomeroomId())
-                                .dayOfWeek(entry.getDayOfWeek())
-                                .period(entry.getPeriod())
-                                .courseId(entry.getCourseId())
-                                .build())
-                            .toList())
-                        .by(updatedBy)
-                        .build();
-                timetableEntryService.upsert(entriesInput);
-            }
-
-            // ConstraintViolationsを作成
-            if (input.getConstraintViolations() != null && !input.getConstraintViolations().isEmpty()) {
-                dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput violationsInput =
-                    dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput.builder()
-                        .timetableResultId(resultId)
-                        .constraintViolations(input.getConstraintViolations().stream()
-                            .map(violation -> dev.timetable.spring.dto.constraintviolation.UpsertConstraintViolationsInput.ConstraintViolationInput.builder()
-                                .id(violation.getId())
-                                .constraintViolationCode(violation.getConstraintViolationCode())
-                                .violatingKeys(violation.getViolatingKeys())
-                                .build())
-                            .toList())
-                        .by(updatedBy)
-                        .build();
-                constraintViolationService.upsert(violationsInput);
-            }
+        // エンティティマップを作成
+        Map<Long, HomeroomEntity> homeroomMap = Map.of();
+        if (!allHomeroomIds.isEmpty()) {
+            List<HomeroomEntity> homerooms = homeroomRepository.findAllById(allHomeroomIds);
+            EntityValidationUtil.validateAllEntitiesExist(allHomeroomIds, homerooms, HomeroomEntity::getId, "学級ID");
+            homeroomMap = EntityMapUtil.toMap(homerooms, HomeroomEntity::getId);
         }
+
+        Map<Long, CourseEntity> courseMap = Map.of();
+        if (!allCourseIds.isEmpty()) {
+            List<CourseEntity> courses = courseRepository.findAllById(allCourseIds);
+            EntityValidationUtil.validateAllEntitiesExist(allCourseIds, courses, CourseEntity::getId, "講座ID");
+            courseMap = EntityMapUtil.toMap(courses, CourseEntity::getId);
+        }
+
+        // 親エンティティを作成し、子エンティティも同時に追加
+        final Map<Long, HomeroomEntity> finalHomeroomMap = homeroomMap;
+        final Map<Long, CourseEntity> finalCourseMap = courseMap;
+
+        List<TimetableResultEntity> entities = inputs.stream()
+            .map(input -> {
+                TimetableResultEntity entity = TimetableResultUpdater.create(ttid, input, updatedBy, now);
+
+                // TimetableEntriesを作成して親に追加
+                if (input.getTimetableEntries() != null && !input.getTimetableEntries().isEmpty()) {
+                    List<TimetableEntryEntity> entries = input.getTimetableEntries().stream()
+                        .map(entryInput -> TimetableEntryUpdater.create(
+                            entity,
+                            finalHomeroomMap.get(entryInput.getHomeroomId()),
+                            finalCourseMap.get(entryInput.getCourseId()),
+                            entryInput,
+                            updatedBy,
+                            now
+                        ))
+                        .toList();
+                    entity.getTimetableEntries().addAll(entries);
+                }
+
+                // ConstraintViolationsを作成して親に追加
+                if (input.getConstraintViolations() != null && !input.getConstraintViolations().isEmpty()) {
+                    List<ConstraintViolationEntity> violations = input.getConstraintViolations().stream()
+                        .map(violationInput -> ConstraintViolationUpdater.create(
+                            entity,
+                            violationInput,
+                            updatedBy,
+                            now
+                        ))
+                        .toList();
+                    entity.getConstraintViolations().addAll(violations);
+                }
+
+                return entity;
+            })
+            .toList();
+
+        // CascadeType.ALLにより1回のsaveで親と子が全て保存される
+        timetableResultRepository.saveAll(entities);
 
         return entities;
     }
