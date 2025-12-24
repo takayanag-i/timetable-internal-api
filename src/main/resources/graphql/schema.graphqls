@@ -484,7 +484,7 @@ type TimetableResult {
 # 時間割エントリ
 type TimetableEntry {
     id: ID!
-    timetableResult: TimetableResult!
+    timetableResult: TimetableResult! # けす
     homeroom: Homeroom!
     dayOfWeek: String!
     period: Int!
