@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import dev.timetable.spring.domain.entity.GradeEntity;
 import dev.timetable.spring.dto.grade.RetrieveGradesInput;
 import dev.timetable.spring.dto.grade.UpsertGradesInput;
-import dev.timetable.spring.dto.grade.UpsertGradesInput.UpdateGradeInput;
+import dev.timetable.spring.dto.grade.UpsertGradesInput.GradeInput;
 import dev.timetable.spring.repository.GradeRepository;
 
 /**
@@ -95,7 +95,7 @@ class GradeServiceTest {
             UpsertGradesInput.builder()
                 .ttid(TEST_TTID)
                 .grades(List.of(
-                    UpdateGradeInput.builder()
+                    GradeInput.builder()
                         .gradeName("1年")
                         .build()
                 ))
@@ -113,7 +113,7 @@ class GradeServiceTest {
             UpsertGradesInput.builder()
                 .ttid(TEST_TTID)
                 .grades(List.of(
-                    UpdateGradeInput.builder()
+                    GradeInput.builder()
                         .id(grade.getId())
                         .gradeName("2年")
                         .build()

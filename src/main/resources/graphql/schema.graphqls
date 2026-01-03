@@ -146,11 +146,11 @@ input RetrieveTimetableResultsInput {
 # 学校曜日作成更新Input
 input UpsertSchoolDaysInput {
     ttid: UUID!
-    schoolDays: [UpdateSchoolDayInput!]!
+    schoolDays: [SchoolDayInput!]!
     by: String!
 }
 
-input UpdateSchoolDayInput {
+input SchoolDayInput {
     schoolDayId: ID
     dayOfWeek: String!
     isAvailable: Boolean!
@@ -161,17 +161,17 @@ input UpdateSchoolDayInput {
 # 教員作成更新Input
 input UpsertInstructorsInput {
     ttid: UUID!
-    instructors: [UpdateInstructorInput!]!
+    instructors: [InstructorInput!]!
     by: String!
 }
 
-input UpdateInstructorInput {
+input InstructorInput {
     id: ID
     instructorName: String!
     disciplineCode: String!
-    attendanceDays: [UpdateAttendanceDayInput!]!
+    attendanceDays: [AttendanceDayInput!]!
 }
-input UpdateAttendanceDayInput {
+input AttendanceDayInput {
     id: ID
     dayOfWeek: String!
     unavailablePeriods: [Int!]!
@@ -180,11 +180,11 @@ input UpdateAttendanceDayInput {
 # 科目作成更新Input
 input UpsertSubjectsInput {
     ttid: UUID!
-    subjects: [UpdateSubjectInput!]!
+    subjects: [SubjectInput!]!
     by: String!
 }
 
-input UpdateSubjectInput {
+input SubjectInput {
     id: ID
     disciplineCode: String!
     subjectName: String!
@@ -195,11 +195,11 @@ input UpdateSubjectInput {
 # 教室作成更新Input
 input UpsertRoomsInput {
     ttid: UUID!
-    rooms: [UpdateRoomInput!]!
+    rooms: [RoomInput!]!
     by: String!
 }
 
-input UpdateRoomInput {
+input RoomInput {
     id: ID
     roomName: String!
 }
@@ -258,11 +258,11 @@ input CourseDetailInput {
 # 学年作成更新Input
 input UpsertGradesInput {
     ttid: UUID
-    grades: [UpdateGradeInput!]!
+    grades: [GradeInput!]!
     by: String!
 }
 
-input UpdateGradeInput {
+input GradeInput {
     id: ID
     gradeName: String!
 }

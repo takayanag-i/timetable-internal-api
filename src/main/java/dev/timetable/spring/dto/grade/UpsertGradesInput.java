@@ -16,13 +16,13 @@ import lombok.extern.jackson.Jacksonized;
 public class UpsertGradesInput {
 
     UUID ttid;
-    List<UpdateGradeInput> grades;
+    List<GradeInput> grades;
     String by;
 
     @Value
     @Builder
     @Jacksonized
-    public static class UpdateGradeInput {
+    public static class GradeInput {
         Long id;
         String gradeName;
     }
