@@ -1,7 +1,14 @@
-# Timetable Internal API
+# Internal API
 ## Container
 - **OS**: Ubuntu 24.04.2 LTS (noble)
 - **JDK**: Temurin 21.0.7+6-LTS (Java21)
+
+## Run Local Server
+
+- docker-composeがあるディレクトリから実行する場合
+```shell
+docker-compose exec spring sh -c "cd /workspaces/timetable/spring && ./gradlew bootRun"
+```
 
 ## Actions
 - ユニットテスト

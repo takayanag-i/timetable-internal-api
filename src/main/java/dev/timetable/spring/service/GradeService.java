@@ -13,7 +13,7 @@ import dev.timetable.spring.domain.entity.GradeEntity;
 import dev.timetable.spring.domain.updater.GradeUpdater;
 import dev.timetable.spring.dto.grade.RetrieveGradesInput;
 import dev.timetable.spring.dto.grade.UpsertGradesInput;
-import dev.timetable.spring.dto.grade.UpsertGradesInput.UpdateGradeInput;
+import dev.timetable.spring.dto.grade.UpsertGradesInput.GradeInput;
 import dev.timetable.spring.repository.GradeRepository;
 import dev.timetable.spring.util.EntityMapUtil;
 import dev.timetable.spring.util.EntityValidationUtil;
@@ -48,17 +48,17 @@ public class GradeService {
 
     @Transactional(rollbackFor = Exception.class)
     public List<GradeEntity> upsert(UpsertGradesInput input) {
-        List<UpdateGradeInput> grades = input.getGrades();
+        List<GradeInput> grades = input.getGrades();
         List<GradeEntity> result = new ArrayList<>();
 
         if (!grades.isEmpty()) {
             OffsetDateTime now = OffsetDateTime.now();
 
-            List<UpdateGradeInput> gradesToCreate = grades.stream()
+            List<GradeInput> gradesToCreate = grades.stream()
                 .filter(update -> update.getId() == null)
                 .toList();
 
-            List<UpdateGradeInput> gradesToUpdate = grades.stream()
+            List<GradeInput> gradesToUpdate = grades.stream()
                 .filter(update -> update.getId() != null)
                 .toList();
 
@@ -80,7 +80,7 @@ public class GradeService {
         return result;
     }
 
-    private List<GradeEntity> create(UUID ttid, List<UpdateGradeInput> inputs, String updatedBy, OffsetDateTime now) {
+    private List<GradeEntity> create(UUID ttid, List<GradeInput> inputs, String updatedBy, OffsetDateTime now) {
         List<GradeEntity> entities = inputs.stream()
             .map(input -> GradeUpdater.create(ttid, input, updatedBy, now))
             .toList();
@@ -89,9 +89,9 @@ public class GradeService {
         return entities;
     }
 
-    private List<GradeEntity> update(List<UpdateGradeInput> inputs, String updatedBy, OffsetDateTime now) {
+    private List<GradeEntity> update(List<GradeInput> inputs, String updatedBy, OffsetDateTime now) {
         List<Long> ids = inputs.stream()
-            .map(UpdateGradeInput::getId)
+            .map(GradeInput::getId)
             .toList();
 
         List<GradeEntity> entities = gradeRepository.findAllById(ids);

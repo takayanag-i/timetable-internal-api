@@ -1,0 +1,16 @@
+---
+alwaysApply: true
+---
+
+# 命名規則
+
+## GraphQL Input型の命名規則
+
+GraphQLスキーマとJavaクラスのInput型は、`Update`プレフィックスを付けずに命名する。
+- `UpdateXXXInput` → `XXXInput` の形式で命名する
+
+## Javaコードの規則
+
+- 完全修飾名は使用しない。import文を使用する。
+- 内部クラスを使用する場合は、パッケージ名を含む完全修飾名でimportする。
+
